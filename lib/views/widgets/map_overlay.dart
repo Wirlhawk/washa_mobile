@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:washa_mobile/data/notifiers.dart';
+import 'package:washa_mobile/data/style.dart';
 
 class MapOverlay extends StatefulWidget {
   const MapOverlay({super.key});
@@ -97,8 +98,8 @@ class MapOverlayState extends State<MapOverlay> {
                               ),
                               child: Icon(
                                 Iconsax.location5,
-                                color:
-                                    Colors.blue, // Style.primary or your color
+                                color: Style
+                                    .primary, // Style.primary or your color
                               ),
                             ),
                           )
