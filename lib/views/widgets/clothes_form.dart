@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:washa_mobile/data/style.dart';
+import 'package:washa_mobile/helper/format_rupiah.dart';
 import 'package:washa_mobile/views/widgets/header.dart';
 
 class ClothesForm extends StatefulWidget {
   final String label;
   final int clothesID;
-  final Function(int, int)? updateQuantity; // Ensure correct type
+  final double price;
+  final Function(int, int)? updateQuantity;
 
   const ClothesForm({
     super.key,
     required this.label,
     this.updateQuantity,
     required this.clothesID,
+    required this.price,
   });
 
   @override
@@ -54,9 +57,20 @@ class _ClothesFormState extends State<ClothesForm> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Header(
-            widget.label,
-            color: quantity > 0 ? Colors.white : Style.primary,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Header(
+                widget.label,
+                color: quantity > 0 ? Colors.white : Style.primary,
+              ),
+              Text(
+                formatRupiah(widget.price),
+                style: TextStyle(
+                  color: quantity > 0 ? Colors.white : Style.secondaryText,
+                ),
+              )
+            ],
           ),
           Row(
             children: [

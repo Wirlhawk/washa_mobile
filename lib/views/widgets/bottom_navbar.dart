@@ -11,39 +11,49 @@ class BottomNavbar extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: selectedIndex,
       builder: (context, index, child) {
-        return NavigationBar(
-          backgroundColor: const Color.fromARGB(255, 240, 240, 240),
-          shadowColor: Colors.black,
-          elevation: 0,
-          height: 80,
-          onDestinationSelected: (value) => selectedIndex.value = value,
-          indicatorColor: Colors.transparent,
-          destinations: [
-            NavigationDestination(
-              icon: index == 0
-                  ? Icon(Iconsax.home5, color: Style.primary)
-                  : Icon(Iconsax.home),
-              label: "Home",
-            ),
-            NavigationDestination(
-              icon: index == 1
-                  ? Icon(Iconsax.setting1, color: Style.primary)
-                  : Icon(Iconsax.setting),
-              label: "Search",
-            ),
-            NavigationDestination(
-              icon: index == 2
-                  ? Icon(Iconsax.receipt_2_15, color: Style.primary)
-                  : Icon(Iconsax.receipt),
-              label: "Order",
-            ),
-            NavigationDestination(
-              icon: index == 3
-                  ? Icon(Iconsax.user, color: Style.primary)
-                  : Icon(Iconsax.user4),
-              label: "Profile",
-            ),
-          ],
+        return Container(
+          decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: NavigationBar(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.black,
+            elevation: 0,
+            height: 80,
+            onDestinationSelected: (value) => selectedIndex.value = value,
+            indicatorColor: Colors.transparent,
+            destinations: [
+              NavigationDestination(
+                icon: index == 0
+                    ? Icon(Iconsax.home5, color: Style.primary)
+                    : Icon(Iconsax.home),
+                label: "Home",
+              ),
+              NavigationDestination(
+                icon: index == 1
+                    ? Icon(Iconsax.setting1, color: Style.primary)
+                    : Icon(Iconsax.setting),
+                label: "Search",
+              ),
+              NavigationDestination(
+                icon: index == 2
+                    ? Icon(Iconsax.receipt_2_15, color: Style.primary)
+                    : Icon(Iconsax.receipt),
+                label: "History",
+              ),
+              NavigationDestination(
+                icon: index == 3
+                    ? Icon(Iconsax.user, color: Style.primary)
+                    : Icon(Iconsax.user4),
+                label: "Profile",
+              ),
+            ],
+          ),
         );
       },
     );

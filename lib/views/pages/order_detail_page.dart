@@ -6,9 +6,12 @@ import 'package:washa_mobile/helper/format_date.dart';
 import 'package:washa_mobile/helper/format_rupiah.dart';
 import 'package:washa_mobile/helper/format_status.dart';
 import 'package:washa_mobile/service/order_service.dart';
+import 'package:washa_mobile/views/pages/home_page.dart';
+import 'package:washa_mobile/views/pages/success_page.dart';
 import 'package:washa_mobile/views/widgets/appbar_title.dart';
 import 'package:washa_mobile/views/widgets/custom_card.dart';
 import 'package:washa_mobile/views/widgets/header.dart';
+import 'package:washa_mobile/views/widgets/map_overlay.dart';
 
 class OrderDetailPage extends StatelessWidget {
   final String orderID;
@@ -60,13 +63,14 @@ class OrderDetailPage extends StatelessWidget {
               ),
 
               Center(
-                child: Text("ID10381515"),
+                child: Text(order['id']),
               ),
               SizedBox(
                 height: 10,
               ),
               CustomCard(
-                child: Row(
+                child: Column(
+                  spacing: 10,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
@@ -95,20 +99,36 @@ class OrderDetailPage extends StatelessWidget {
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(right: 15),
                       padding: EdgeInsets.all(10),
+                      width: double.infinity,
                       decoration: BoxDecoration(
                           color: Style.primary.withAlpha(50),
                           borderRadius: BorderRadius.circular(10)),
                       child: Header(
+                        textAlign: TextAlign.center,
                         formatStatus(order['status']),
                         color: Style.primary,
                         fontSize: 14,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
+
+              SizedBox(
+                height: 200,
+                child: CustomCard(
+                  child: Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: MapOverlay(
+                      label: "Order Location",
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 10),
 
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,10 +138,11 @@ class OrderDetailPage extends StatelessWidget {
                   Column(
                     spacing: 10,
                     children: [
-                      _buildDetail("Order ID", order['id']),
+                      // _buildDetail("Order ID", order['id']),
                       _buildDetail("Time",
                           formatDate(DateTime.parse(order['created_at']))),
-                      _buildDetail("Service", order['services']['name'])
+                      _buildDetail("Service", order['services']['name']),
+                      _buildDetail("Address", order['address'])
                     ],
                   )
                 ],
@@ -168,6 +189,35 @@ class OrderDetailPage extends StatelessWidget {
                   )
                 ],
               ),
+
+              if (order['status'] == 1 || order['status'] == 0)
+                const SizedBox(height: 20),
+              if (order['status'] == 1)
+                _buildBottomAction(context,
+                    label: "Cancel Order", orderID: order['id'], onTap: () {
+                  orderService.cancelOrder(orderID);
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => SuccessPage(
+                          label: "Order Cancelled",
+                          nextPage: OrderDetailPage(orderID: orderID)),
+                    ),
+                  );
+                }),
+
+              if (order['status'] == 0)
+                _buildBottomAction(context,
+                    label: "Delete Order", orderID: order['id'], onTap: () {
+                  orderService.deleteOrder(orderID);
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => SuccessPage(
+                        label: "Order Deleted",
+                        nextPage: HomePage(),
+                      ),
+                    ),
+                  );
+                })
             ],
           ),
         );
@@ -192,7 +242,7 @@ class OrderDetailPage extends StatelessWidget {
   }
 
   Widget _buildItemPrice(
-      String itemName, double itemPrice, double subTotal, int qty) {
+      String itemName, num itemPrice, num subTotal, num qty) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -213,6 +263,29 @@ class OrderDetailPage extends StatelessWidget {
           ],
         )
       ],
+    );
+  }
+
+  Widget _buildBottomAction(BuildContext context,
+      {required String orderID,
+      required Function() onTap,
+      required String label}) {
+    return InkWell(
+      splashColor: Colors.red.withAlpha(50),
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.red),
+            borderRadius: BorderRadius.circular(10)),
+        child: Header(
+          label,
+          textAlign: TextAlign.center,
+          color: Colors.red,
+          fontSize: 14,
+        ),
+      ),
     );
   }
 }

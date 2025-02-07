@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:washa_mobile/models/order_model.dart';
 
@@ -6,7 +5,10 @@ class OrderService {
   final _supabase = Supabase.instance.client;
 
   Future<List<Map<String, dynamic>>> getAllService() async {
-    return await _supabase.from('services').select();
+    return await _supabase
+        .from('services')
+        .select()
+        .order('created_at', ascending: true);
   }
 
   Future<List<Map<String, dynamic>>> getAllClothes() async {
@@ -33,7 +35,6 @@ class OrderService {
   }) async {
     final userID = _supabase.auth.currentUser!.id;
 
-    debugPrint("service id: $serviceID");
     var newOrder = await _supabase
         .from('orders')
         .insert([
@@ -48,8 +49,6 @@ class OrderService {
         .select()
         .single();
 
-    debugPrint(newOrder.toString());
-
     List<Map<String, dynamic>> ordersMap = orders
         .map(
           (order) => {
@@ -60,8 +59,6 @@ class OrderService {
           },
         )
         .toList();
-
-    debugPrint(ordersMap.toString());
 
     await _supabase.from('order_items').insert(ordersMap);
 
@@ -76,5 +73,15 @@ class OrderService {
         .select('*,services(*), order_items(*, clothes(name, price))')
         .eq('user_id', userID)
         .order('created_at', ascending: false);
+  }
+
+  Future<void> cancelOrder(String orderID) async {
+    return await _supabase
+        .from('orders')
+        .update({'status': 0}).eq('id', orderID);
+  }
+
+  Future<void> deleteOrder(String orderID) async {
+    return await _supabase.from('orders').delete().eq('id', orderID);
   }
 }

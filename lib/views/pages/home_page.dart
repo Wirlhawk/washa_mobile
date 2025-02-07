@@ -128,11 +128,12 @@ class HomePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 Map<String, dynamic> activeOrder = activeOrders[index];
                 return OrderCard(
-                    orderID: activeOrder['id'],
-                    image: activeOrder['services']['image'],
-                    serviceName: activeOrder['services']['name'],
-                    status: activeOrder['status'],
-                    price: activeOrder['total_price']);
+                  orderID: activeOrder['id'],
+                  image: activeOrder['services']['image'],
+                  serviceName: activeOrder['services']['name'],
+                  status: activeOrder['status'],
+                  price: activeOrder['total_price'],
+                );
               },
             );
           },
@@ -214,11 +215,12 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("statussssss : $status");
     return InkWell(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => OrderDetailPage(orderID: orderID),
+          //   builder: (context) =>
+          //       SuccessPage(nextPage: OrderDetailPage(orderID: orderID)),
         ),
       ),
       child: Column(spacing: 20, children: [

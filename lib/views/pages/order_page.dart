@@ -74,6 +74,7 @@ class _OrderPageState extends State<OrderPage> {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => SuccessPage(
+              label: "Order Created",
               nextPage: OrderDetailPage(
                 orderID: newOrder['id'],
               ),
@@ -184,6 +185,7 @@ class _OrderPageState extends State<OrderPage> {
                 _calculateTotalPrice();
               },
               child: ClothesForm(
+                price: clothes[index]['price'],
                 label: clothes[index]
                     ['name'], // Pastikan key 'name' ada di data
                 clothesID: clothes[index]['id'],
