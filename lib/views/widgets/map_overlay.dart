@@ -5,9 +5,11 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:washa_mobile/data/notifiers.dart';
+import 'package:washa_mobile/data/style.dart';
 
 class MapOverlay extends StatefulWidget {
-  const MapOverlay({super.key});
+  final String label;
+  const MapOverlay({super.key, this.label = ""});
 
   @override
   MapOverlayState createState() => MapOverlayState();
@@ -37,8 +39,6 @@ class MapOverlayState extends State<MapOverlay> {
         _currentLocation = LatLng(position.latitude, position.longitude);
         _locationFetched = true;
       });
-
-      debugPrint("$position");
 
       _getAddressFromCoordinates(position.latitude, position.longitude);
     } catch (e) {
@@ -87,19 +87,30 @@ class MapOverlayState extends State<MapOverlay> {
                       MarkerLayer(
                         markers: [
                           Marker(
+                            width: 200,
+                            height: 100,
                             point: _currentLocation,
-                            width: 60,
-                            height: 60,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(83, 68, 137, 255),
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Icon(
-                                Iconsax.location5,
-                                color:
-                                    Colors.blue, // Style.primary or your color
-                              ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(83, 68, 137, 255),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Icon(
+                                    Iconsax.location5,
+                                    color:
+                                        Style.primary, // Style.primary or your
+                                  ),
+                                ),
+                                Text(
+                                  widget.label,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                )
+                              ],
                             ),
                           )
                         ],

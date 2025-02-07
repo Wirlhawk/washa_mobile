@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:washa_mobile/data/notifiers.dart';
+import 'package:washa_mobile/views/pages/history_page.dart';
 import 'package:washa_mobile/views/pages/home_page.dart';
+import 'package:washa_mobile/views/pages/order_page.dart';
 import 'package:washa_mobile/views/widgets/bottom_navbar.dart';
 import 'package:washa_mobile/views/widgets/map_overlay.dart';
 
@@ -11,9 +13,9 @@ class WidgetTree extends StatelessWidget {
 
   final List<Widget> pages = [
     HomePage(),
-    OrderCard(),
-    MapOverlay(),
-    HomePage()
+    OrderPage(),
+    HistoryPage(),
+    MapOverlay()
   ];
   @override
   Widget build(BuildContext context) {
