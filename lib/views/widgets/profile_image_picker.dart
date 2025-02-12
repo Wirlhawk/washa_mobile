@@ -96,6 +96,8 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
             ),
           ),
         ),
+        ElevatedButton(
+            onPressed: () => _showSnackBar(context), child: Text("snakcnar"))
       ],
     );
   }
@@ -105,16 +107,17 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Edit image"),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Header(
+              "Save Profile Image?",
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+            ),
+          ),
           Row(
             children: [
-              TextButton(
-                onPressed: () {
-                  uploadImage();
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                },
-                child: Text("Save", style: TextStyle(color: Colors.white)),
-              ),
               TextButton(
                 onPressed: () {
                   setState(() {
@@ -124,13 +127,23 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
                 },
                 child: Text("Cancel", style: TextStyle(color: Colors.white)),
               ),
+              TextButton(
+                style: ButtonStyle(
+                    
+                ),
+                onPressed: () {
+                  uploadImage();
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+                child: Text("Save", style: TextStyle(color: Colors.white)),
+              ),
             ],
           ),
         ],
       ),
       behavior: SnackBarBehavior.floating,
       backgroundColor: Style.primary,
-      shape: StadiumBorder(),
+      shape: StadiumBorder(side: BorderSide.none),
       duration: Duration(days: 1), // Stays visible until user interacts
     );
 
