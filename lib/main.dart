@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:washa_mobile/auth/auth_gate.dart';
+import 'package:washa_mobile/data/style.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        colorScheme: ColorScheme(
+            brightness: Brightness.light,
+            primary: Style.primary,
+            onPrimary: Colors.white,
+            secondary: Style.muted,
+            onSecondary: Style.secondaryText,
+            error: Colors.red,
+            onError: Colors.red,
+            surface: Colors.white,
+            onSurface: Style.secondaryText),
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ),

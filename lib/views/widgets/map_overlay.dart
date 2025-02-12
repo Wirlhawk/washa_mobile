@@ -22,19 +22,30 @@ class MapOverlayState extends State<MapOverlay> {
   @override
   void initState() {
     super.initState();
-    _currentLocation = LatLng(1.31, 103.8666);
+    _getLastKnownLocation();
     _getCurrentLocation();
+  }
+
+  Future<void> _getLastKnownLocation() async {
+    try {
+      Position? position = await Geolocator.getLastKnownPosition();
+      setState(() {
+        _currentLocation = LatLng(position!.latitude, position.longitude);
+      });
+    } catch (e) {
+      debugPrint('$e');
+    }
   }
 
   Future<void> _getCurrentLocation() async {
     try {
-      await Geolocator.requestPermission();
       Position position = await Geolocator.getCurrentPosition(
         locationSettings: LocationSettings(
           accuracy: LocationAccuracy.high,
           distanceFilter: 100,
         ),
       );
+
       setState(() {
         _currentLocation = LatLng(position.latitude, position.longitude);
         _locationFetched = true;
@@ -46,9 +57,10 @@ class MapOverlayState extends State<MapOverlay> {
     }
   }
 
-  // Get address from latitude and longitude using geocoding
   Future<void> _getAddressFromCoordinates(
-      double latitude, double longitude) async {
+    double latitude,
+    double longitude,
+  ) async {
     try {
       List<Placemark> placemarks =
           await placemarkFromCoordinates(latitude, longitude);

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
@@ -34,7 +36,9 @@ class AuthService {
 
     final userID = userData.user?.id;
 
-    await _supabase.from('users').upsert({'id': userID, 'username': username});
+    return await _supabase
+        .from('users')
+        .upsert({'id': userID, 'username': username});
   }
 
   Future<void> signOut() async {
@@ -44,5 +48,27 @@ class AuthService {
   getCurrentUser() {
     final session = _supabase.auth.currentSession;
     return session?.user;
+  }
+
+  Future<dynamic> getCurrentUserProfile() async {
+    final user = getCurrentUser();
+
+    final userProfile =
+        await _supabase.from('users').select().eq('id', user.id).single();
+
+    inspect(userProfile);
+
+    return userProfile;
+  }
+
+  Future uploadProfileImage(path, file) async {
+    await _supabase.storage.from('image').upload(path, file);
+
+    // Get the public URL
+    final String imageUrl = _supabase.storage.from('image').getPublicUrl(path);
+
+    final user = getCurrentUser();
+
+    await _supabase.from('users').update({'image': imageUrl}).eq('id', user.id);
   }
 }

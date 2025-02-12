@@ -3,8 +3,8 @@ import 'package:washa_mobile/data/notifiers.dart';
 import 'package:washa_mobile/views/pages/history_page.dart';
 import 'package:washa_mobile/views/pages/home_page.dart';
 import 'package:washa_mobile/views/pages/order_page.dart';
+import 'package:washa_mobile/views/pages/profile_page.dart';
 import 'package:washa_mobile/views/widgets/bottom_navbar.dart';
-import 'package:washa_mobile/views/widgets/map_overlay.dart';
 
 class WidgetTree extends StatelessWidget {
   WidgetTree({
@@ -15,7 +15,7 @@ class WidgetTree extends StatelessWidget {
     HomePage(),
     OrderPage(),
     HistoryPage(),
-    MapOverlay()
+    ProfilePage()
   ];
   @override
   Widget build(BuildContext context) {

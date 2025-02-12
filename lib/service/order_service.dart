@@ -75,6 +75,25 @@ class OrderService {
         .order('created_at', ascending: false);
   }
 
+  Future<List<Map<String, dynamic>>> getAllOrder(int? status) async {
+    final userID = _supabase.auth.currentUser!.id;
+
+    if ( status != null ) {
+        return await _supabase
+        .from('orders')
+        .select('*,services(*), order_items(*, clothes(name, price))')
+        .eq('user_id', userID)
+        .eq('status', status)
+        .order('created_at', ascending: false);
+    } else {
+        return await _supabase
+        .from('orders')
+        .select('*,services(*), order_items(*, clothes(name, price))')
+        .eq('user_id', userID)
+        .order('created_at', ascending: false);
+    }
+  }
+
   Future<void> cancelOrder(String orderID) async {
     return await _supabase
         .from('orders')
