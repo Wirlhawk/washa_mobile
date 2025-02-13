@@ -46,7 +46,7 @@ class OrderDetailPage extends StatelessWidget {
           );
         }
 
-        inspect(snapshot.data);
+        inspect(snapshot.data!);
         final order = snapshot.data!;
 
         return SingleChildScrollView(
@@ -123,6 +123,8 @@ class OrderDetailPage extends StatelessWidget {
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(20)),
                     child: MapOverlay(
+                      lat: order['address']['lat'],
+                      long: order['address']['long'],
                       label: "Order Location",
                     ),
                   ),
@@ -143,7 +145,8 @@ class OrderDetailPage extends StatelessWidget {
                       _buildDetail("Time",
                           formatDate(DateTime.parse(order['created_at']))),
                       _buildDetail("Service", order['services']['name']),
-                      _buildDetail("Address", order['address'])
+                      //   _buildDetail("Address",
+                      //       order['address']['address']['address'].toString())
                     ],
                   )
                 ],

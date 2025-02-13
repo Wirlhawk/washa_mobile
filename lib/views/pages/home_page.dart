@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:washa_mobile/auth/auth_service.dart';
@@ -21,13 +23,27 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = _authService.getCurrentUser();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              MapOverlay(),
+              FutureBuilder(
+                future: _authService.getCurrentUserProfile(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  final userProfile = snapshot.data!;
+
+                  return MapOverlay(
+                      lat: userProfile['address']['lat'],
+                      long: userProfile['address']['long']);
+                },
+              ),
+              //   MapOverlay(lat: , long:),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -191,8 +207,6 @@ class LocationInput extends StatelessWidget {
     );
   }
 }
-
-
 
 class ServiceItem extends StatelessWidget {
   final String label;

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
@@ -71,16 +70,6 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
           right: -1,
           child: GestureDetector(
             onTap: pickImage,
-            // onTap: () {
-            //   final snackbar = SnackBar(
-            //     content: Text("Edit image"),
-            //     behavior: SnackBarBehavior.floating,
-            //     backgroundColor: Style.primary,
-            //     shape: StadiumBorder(),
-            //   );
-
-            //   ScaffoldMessenger.of(context).showSnackBar(snackbar);
-            // },
             child: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
@@ -96,8 +85,7 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
             ),
           ),
         ),
-        ElevatedButton(
-            onPressed: () => _showSnackBar(context), child: Text("snakcnar"))
+
       ],
     );
   }
@@ -144,7 +132,7 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
       behavior: SnackBarBehavior.floating,
       backgroundColor: Style.primary,
       shape: StadiumBorder(side: BorderSide.none),
-      duration: Duration(days: 1), // Stays visible until user interacts
+      duration: Duration(days: 1),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackbar);

@@ -1,8 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:washa_mobile/auth/auth_service.dart';
+import 'package:washa_mobile/views/pages/location_picker_page.dart';
 import 'package:washa_mobile/views/widgets/appbar_title.dart';
 import 'package:washa_mobile/views/widgets/custom_list_tile.dart';
 import 'package:washa_mobile/views/widgets/header.dart';
@@ -75,10 +75,14 @@ class ProfilePage extends StatelessWidget {
       spacing: 20,
       children: [
         CustomListTile(
-          label: "Blk F no 25.",
+          label: "user['address']['address']",
           labelIcon: Iconsax.location5,
           buttonIcon: Iconsax.edit,
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => LocationPickerPage(),
+            ));
+          },
         ),
         CustomListTile(
           label: "Log Out",

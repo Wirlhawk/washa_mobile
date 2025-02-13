@@ -29,18 +29,23 @@ class OrderService {
 
   Future<PostgrestMap> createOrder({
     required List<OrderModel> orders,
-    required String address,
     required int serviceID,
     required double price,
   }) async {
     final userID = _supabase.auth.currentUser!.id;
+
+    final userAddress = await _supabase
+        .from('users')
+        .select('address')
+        .eq('id', userID)
+        .single();
 
     var newOrder = await _supabase
         .from('orders')
         .insert([
           {
             'user_id': userID,
-            'address': address,
+            'address': userAddress['address'],
             'total_price': price,
             'service_id': serviceID,
             'status': 1,
@@ -78,19 +83,19 @@ class OrderService {
   Future<List<Map<String, dynamic>>> getAllOrder(int? status) async {
     final userID = _supabase.auth.currentUser!.id;
 
-    if ( status != null ) {
-        return await _supabase
-        .from('orders')
-        .select('*,services(*), order_items(*, clothes(name, price))')
-        .eq('user_id', userID)
-        .eq('status', status)
-        .order('created_at', ascending: false);
+    if (status != null) {
+      return await _supabase
+          .from('orders')
+          .select('*,services(*), order_items(*, clothes(name, price))')
+          .eq('user_id', userID)
+          .eq('status', status)
+          .order('created_at', ascending: false);
     } else {
-        return await _supabase
-        .from('orders')
-        .select('*,services(*), order_items(*, clothes(name, price))')
-        .eq('user_id', userID)
-        .order('created_at', ascending: false);
+      return await _supabase
+          .from('orders')
+          .select('*,services(*), order_items(*, clothes(name, price))')
+          .eq('user_id', userID)
+          .order('created_at', ascending: false);
     }
   }
 

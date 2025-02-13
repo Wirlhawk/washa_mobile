@@ -32,20 +32,21 @@ class CustomListTile extends StatelessWidget {
           ],
         ),
         child: Row(
-          spacing: 10,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-              spacing: 10,
               children: [
                 Icon(
                   labelIcon,
                   color: Style.primary,
                 ),
+                const SizedBox(width: 10),
                 Text(
                   label,
                   style: TextStyle(fontWeight: FontWeight.bold),
-                )
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ],
             ),
             IconButton(
