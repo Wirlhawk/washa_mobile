@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:iconsax/iconsax.dart';
@@ -9,8 +8,8 @@ import 'package:washa_mobile/data/style.dart';
 
 class MapOverlay extends StatefulWidget {
   final String label;
-  final double lat;
-  final double long;
+  final num lat;
+  final num long;
   const MapOverlay(
       {super.key, this.label = "", required this.lat, required this.long});
 
@@ -26,8 +25,9 @@ class MapOverlayState extends State<MapOverlay> {
   void initState() {
     super.initState();
     setState(() {
-      _currentLocation = LatLng(widget.lat, widget.long);
+      _currentLocation = LatLng(widget.lat.toDouble(), widget.long.toDouble());
     });
+    _getAddressFromCoordinates(widget.lat.toDouble(), widget.long.toDouble());
   }
 
 //   Future<void> _getCurrentLocation() async {
@@ -50,22 +50,22 @@ class MapOverlayState extends State<MapOverlay> {
 //     }
 //   }
 
-//   Future<void> _getAddressFromCoordinates(
-//     double latitude,
-//     double longitude,
-//   ) async {
-//     try {
-//       List<Placemark> placemarks =
-//           await placemarkFromCoordinates(latitude, longitude);
+  Future<void> _getAddressFromCoordinates(
+    double latitude,
+    double longitude,
+  ) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
 
-//       if (placemarks.isNotEmpty) {
-//         Placemark place = placemarks[0];
-//         addresNotifier.value = "${place.street}";
-//       }
-//     } catch (e) {
-//       debugPrint("erorrrrr : $e");
-//     }
-//   }
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        addresNotifier.value = "${place.street}";
+      }
+    } catch (e) {
+      debugPrint("erorrrrr : $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

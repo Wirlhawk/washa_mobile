@@ -57,7 +57,7 @@ class OrderDetailPage extends StatelessWidget {
             children: [
               Center(
                 child: QrImageView(
-                  data: '1234567890',
+                  data: order['id'],
                   version: QrVersions.auto,
                   size: 100,
                 ),
@@ -136,6 +136,22 @@ class OrderDetailPage extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Header("Address"),
+                  Text(
+                    order['address']['address'],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Style.secondaryText,
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 10),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Header("Overview"),
                   SizedBox(height: 10),
                   Column(
@@ -145,15 +161,13 @@ class OrderDetailPage extends StatelessWidget {
                       _buildDetail("Time",
                           formatDate(DateTime.parse(order['created_at']))),
                       _buildDetail("Service", order['services']['name']),
-                      //   _buildDetail("Address",
-                      //       order['address']['address']['address'].toString())
                     ],
                   )
                 ],
               ),
 
               SizedBox(height: 10),
-              //   items
+              
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

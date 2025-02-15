@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:washa_mobile/auth/auth_service.dart';
@@ -75,7 +74,7 @@ class ProfilePage extends StatelessWidget {
       spacing: 20,
       children: [
         CustomListTile(
-          label: "user['address']['address']",
+          label: "addresss",
           labelIcon: Iconsax.location5,
           buttonIcon: Iconsax.edit,
           onTap: () {

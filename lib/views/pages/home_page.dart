@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:washa_mobile/auth/auth_service.dart';
@@ -43,7 +41,6 @@ class HomePage extends StatelessWidget {
                       long: userProfile['address']['long']);
                 },
               ),
-              //   MapOverlay(lat: , long:),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -242,8 +239,7 @@ class ServiceItem extends StatelessWidget {
             width: 80,
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              //   color: const Color.fromARGB(20, 8, 66, 226),
-              boxShadow: [
+              boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: Colors.black26,
                   blurRadius: 1,

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
@@ -75,7 +74,6 @@ class AuthService {
 
   Future<void> updateAdress(double lat, double long, String address) async {
     final user = getCurrentUser();
-    debugPrint("$lat $long $address");
 
     await _supabase.from('users').update({
       'address': {

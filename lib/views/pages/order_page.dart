@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:washa_mobile/data/notifiers.dart';
 import 'package:washa_mobile/data/style.dart';
 import 'package:washa_mobile/helper/format_rupiah.dart';
 import 'package:washa_mobile/models/order_model.dart';
 import 'package:washa_mobile/service/order_service.dart';
-import 'package:washa_mobile/views/pages/home_page.dart';
 import 'package:washa_mobile/views/pages/order_detail_page.dart';
 import 'package:washa_mobile/views/pages/success_page.dart';
 import 'package:washa_mobile/views/widgets/appbar_title.dart';
