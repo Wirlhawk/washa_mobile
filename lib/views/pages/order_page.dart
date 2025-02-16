@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:washa_mobile/data/notifiers.dart';
 import 'package:washa_mobile/data/style.dart';
 import 'package:washa_mobile/helper/format_rupiah.dart';
 import 'package:washa_mobile/models/order_model.dart';
 import 'package:washa_mobile/service/order_service.dart';
-import 'package:washa_mobile/views/pages/home_page.dart';
 import 'package:washa_mobile/views/pages/order_detail_page.dart';
 import 'package:washa_mobile/views/pages/success_page.dart';
 import 'package:washa_mobile/views/widgets/appbar_title.dart';
@@ -66,7 +64,6 @@ class _OrderPageState extends State<OrderPage> {
         final newOrder = await orderService.createOrder(
           serviceID: selectedServiceIndex + 1,
           orders: orders,
-          address: addresNotifier.value,
           price: totalPrice,
         );
 
@@ -145,7 +142,7 @@ class _OrderPageState extends State<OrderPage> {
         padding: EdgeInsets.all(20),
         child: Column(
           children: [
-            LocationInput(),
+            // LocationInput(),
             SizedBox(
               height: 20,
             ),
@@ -186,8 +183,7 @@ class _OrderPageState extends State<OrderPage> {
               },
               child: ClothesForm(
                 price: clothes[index]['price'],
-                label: clothes[index]
-                    ['name'], // Pastikan key 'name' ada di data
+                label: clothes[index]['name'],
                 clothesID: clothes[index]['id'],
                 updateQuantity: (qty, clothesID) {
                   updateQuantity(qty, clothesID, clothes[index]['price']);

@@ -1,19 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:washa_mobile/auth/auth_service.dart';
-import 'package:washa_mobile/helper/format_rupiah.dart';
-import 'package:washa_mobile/helper/format_status.dart';
 import 'package:washa_mobile/service/order_service.dart';
-import 'package:washa_mobile/views/pages/order_detail_page.dart';
 import 'package:washa_mobile/views/pages/order_page.dart';
 import 'package:washa_mobile/views/widgets/appbar_title.dart';
 import 'package:washa_mobile/views/widgets/header.dart';
 import 'package:washa_mobile/views/widgets/map_overlay.dart';
 import 'package:washa_mobile/data/notifiers.dart';
 import 'package:washa_mobile/data/style.dart';
+import 'package:washa_mobile/views/widgets/order_card.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({
@@ -26,13 +21,26 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = _authService.getCurrentUser();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              MapOverlay(),
+              FutureBuilder(
+                future: _authService.getCurrentUserProfile(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  final userProfile = snapshot.data!;
+
+                  return MapOverlay(
+                      lat: userProfile['address']['lat'],
+                      long: userProfile['address']['long']);
+                },
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -114,12 +122,11 @@ class HomePage extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: Header("Loading"),
+                child: CircularProgressIndicator(),
               );
             }
 
             final activeOrders = snapshot.data!;
-            inspect(activeOrders);
             return ListView.separated(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -198,93 +205,6 @@ class LocationInput extends StatelessWidget {
   }
 }
 
-class OrderCard extends StatelessWidget {
-  final String serviceName;
-  final String orderID;
-  final int status;
-  final double price;
-  final String image;
-  const OrderCard({
-    super.key,
-    required this.serviceName,
-    required this.status,
-    required this.price,
-    required this.image,
-    required this.orderID,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => OrderDetailPage(orderID: orderID),
-          //   builder: (context) =>
-          //       SuccessPage(nextPage: OrderDetailPage(orderID: orderID)),
-        ),
-      ),
-      child: Column(spacing: 20, children: [
-        Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 1,
-              ),
-            ],
-            color: Colors.grey.shade100,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    serviceName,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: Style.primary,
-                    ),
-                  ),
-                  Text(
-                    "Estimation Finish Today at 17.30",
-                    style: TextStyle(
-                      color: Style.secondaryText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "${formatStatus(status)} | ${formatRupiah(price)}",
-                    style: GoogleFonts.poppins(
-                      color: Style.secondaryText,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                  )
-                ],
-              ),
-              Image.asset(
-                'assets/images/$image',
-                height: 80,
-                width: 80,
-              ),
-            ],
-          ),
-        ),
-      ]),
-    );
-  }
-}
-
 class ServiceItem extends StatelessWidget {
   final String label;
   final String imagePath;
@@ -319,8 +239,7 @@ class ServiceItem extends StatelessWidget {
             width: 80,
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              //   color: const Color.fromARGB(20, 8, 66, 226),
-              boxShadow: [
+              boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: Colors.black26,
                   blurRadius: 1,

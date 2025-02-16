@@ -24,6 +24,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       await _authService.signUpwithEmailPassword(username, email, password);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Register Success, Go To Login Page")));
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
@@ -33,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(

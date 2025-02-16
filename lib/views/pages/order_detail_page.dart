@@ -22,17 +22,18 @@ class OrderDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new_rounded, color: Style.primary),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          centerTitle: true,
-          title: AppbarTitle("Order Detail"),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: Style.primary),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        body: _buildOrderDetail());
+        centerTitle: true,
+        title: AppbarTitle("Order Detail"),
+      ),
+      body: _buildOrderDetail(),
+    );
   }
 
   Widget _buildOrderDetail() {
@@ -41,11 +42,11 @@ class OrderDetailPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: Header("Loading"),
+            child: CircularProgressIndicator(),
           );
         }
 
-        inspect(snapshot.data);
+        inspect(snapshot.data!);
         final order = snapshot.data!;
 
         return SingleChildScrollView(
@@ -56,12 +57,11 @@ class OrderDetailPage extends StatelessWidget {
             children: [
               Center(
                 child: QrImageView(
-                  data: '1234567890',
+                  data: order['id'],
                   version: QrVersions.auto,
                   size: 100,
                 ),
               ),
-
               Center(
                 child: Text(order['id']),
               ),
@@ -91,8 +91,9 @@ class OrderDetailPage extends StatelessWidget {
                             Text(
                               "Ordered Today at 17:30",
                               style: TextStyle(
-                                  color: Style.secondaryText,
-                                  fontWeight: FontWeight.w600),
+                                color: Style.secondaryText,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         )
@@ -122,10 +123,28 @@ class OrderDetailPage extends StatelessWidget {
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(20)),
                     child: MapOverlay(
+                      lat: order['address']['lat'],
+                      long: order['address']['long'],
                       label: "Order Location",
                     ),
                   ),
                 ),
+              ),
+
+              SizedBox(height: 10),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Header("Address"),
+                  Text(
+                    order['address']['address'],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Style.secondaryText,
+                    ),
+                  ),
+                ],
               ),
 
               SizedBox(height: 10),
@@ -142,14 +161,13 @@ class OrderDetailPage extends StatelessWidget {
                       _buildDetail("Time",
                           formatDate(DateTime.parse(order['created_at']))),
                       _buildDetail("Service", order['services']['name']),
-                      _buildDetail("Address", order['address'])
                     ],
                   )
                 ],
               ),
 
               SizedBox(height: 10),
-              //   items
+              
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -193,17 +211,22 @@ class OrderDetailPage extends StatelessWidget {
               if (order['status'] == 1 || order['status'] == 0)
                 const SizedBox(height: 20),
               if (order['status'] == 1)
-                _buildBottomAction(context,
-                    label: "Cancel Order", orderID: order['id'], onTap: () {
-                  orderService.cancelOrder(orderID);
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => SuccessPage(
+                _buildBottomAction(
+                  context,
+                  label: "Cancel Order",
+                  orderID: order['id'],
+                  onTap: () {
+                    orderService.cancelOrder(orderID);
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => SuccessPage(
                           label: "Order Cancelled",
-                          nextPage: OrderDetailPage(orderID: orderID)),
-                    ),
-                  );
-                }),
+                          nextPage: OrderDetailPage(orderID: orderID),
+                        ),
+                      ),
+                    );
+                  },
+                ),
 
               if (order['status'] == 0)
                 _buildBottomAction(context,
@@ -277,8 +300,9 @@ class OrderDetailPage extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.red),
-            borderRadius: BorderRadius.circular(10)),
+          border: Border.all(color: Colors.red),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Header(
           label,
           textAlign: TextAlign.center,
