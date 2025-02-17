@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:washa_mobile/auth/auth_service.dart';
 import 'package:washa_mobile/data/style.dart';
 import 'package:washa_mobile/helper/format_rupiah.dart';
 import 'package:washa_mobile/models/order_model.dart';
@@ -23,12 +24,14 @@ class _OrderPageState extends State<OrderPage> {
   late int selectedServiceIndex;
   int selectedClothesIndex = 0;
   double totalPrice = 0;
+  late Map? address;
 
   List<Map<String, dynamic>> services = [];
   List<Map<String, dynamic>> clothes = [];
   List<OrderModel> orders = [];
 
   final OrderService orderService = OrderService();
+  final AuthService authService = AuthService();
 
   @override
   void initState() {
@@ -38,7 +41,11 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Future<void> _loadData() async {
-    await Future.wait([_fetchClothes(), _fetchServices()]);
+    await Future.wait([
+      _fetchAddress(),
+      _fetchClothes(),
+      _fetchServices(),
+    ]);
     if (services.isNotEmpty && clothes.isNotEmpty) {
       _calculateTotalPrice();
     }
@@ -60,6 +67,18 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<void> _createOrder(BuildContext context) async {
     if (totalPrice > 0) {
+      if (address == null || address!.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Please add your address first"),
+          ),
+        );
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(builder: (context) => LocationPickerPage()),
+        // );
+        return;
+      }
+
       try {
         final newOrder = await orderService.createOrder(
           serviceID: selectedServiceIndex + 1,
@@ -82,6 +101,13 @@ class _OrderPageState extends State<OrderPage> {
         debugPrint('ERROR : $e');
       }
     }
+  }
+
+  Future<void> _fetchAddress() async {
+    final data = await authService.getCurrentUserProfile();
+    setState(() {
+      address = data['address'] ?? {};
+    });
   }
 
   void updateQuantity(int qty, int clothesID, clothesPrice) {

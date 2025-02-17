@@ -56,12 +56,26 @@ class OrderDetailPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
+                  child: GestureDetector(
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    content: SizedBox(
+                      width: 300,
+                      child: QrImageView(
+                        data: order['id'],
+                        version: QrVersions.auto,
+                        size: 300,
+                      ),
+                    ),
+                  ),
+                ),
                 child: QrImageView(
                   data: order['id'],
                   version: QrVersions.auto,
                   size: 100,
                 ),
-              ),
+              )),
               Center(
                 child: Text(order['id']),
               ),
@@ -115,7 +129,6 @@ class OrderDetailPage extends StatelessWidget {
                   ],
                 ),
               ),
-
               SizedBox(
                 height: 200,
                 child: CustomCard(
@@ -130,9 +143,7 @@ class OrderDetailPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               SizedBox(height: 10),
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -146,9 +157,7 @@ class OrderDetailPage extends StatelessWidget {
                   ),
                 ],
               ),
-
               SizedBox(height: 10),
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -157,7 +166,6 @@ class OrderDetailPage extends StatelessWidget {
                   Column(
                     spacing: 10,
                     children: [
-                      // _buildDetail("Order ID", order['id']),
                       _buildDetail("Time",
                           formatDate(DateTime.parse(order['created_at']))),
                       _buildDetail("Service", order['services']['name']),
@@ -165,9 +173,7 @@ class OrderDetailPage extends StatelessWidget {
                   )
                 ],
               ),
-
               SizedBox(height: 10),
-              
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -207,7 +213,6 @@ class OrderDetailPage extends StatelessWidget {
                   )
                 ],
               ),
-
               if (order['status'] == 1 || order['status'] == 0)
                 const SizedBox(height: 20),
               if (order['status'] == 1)
@@ -227,7 +232,6 @@ class OrderDetailPage extends StatelessWidget {
                     );
                   },
                 ),
-
               if (order['status'] == 0)
                 _buildBottomAction(context,
                     label: "Delete Order", orderID: order['id'], onTap: () {

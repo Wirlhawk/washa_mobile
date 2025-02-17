@@ -10,8 +10,13 @@ class MapOverlay extends StatefulWidget {
   final String label;
   final num lat;
   final num long;
-  const MapOverlay(
-      {super.key, this.label = "", required this.lat, required this.long});
+
+  const MapOverlay({
+    super.key,
+    this.label = "",
+    this.lat = 1,
+    this.long = 1,
+  });
 
   @override
   MapOverlayState createState() => MapOverlayState();
@@ -19,7 +24,6 @@ class MapOverlay extends StatefulWidget {
 
 class MapOverlayState extends State<MapOverlay> {
   late LatLng _currentLocation;
-//   bool _locationFetched = false;
 
   @override
   void initState() {
@@ -30,25 +34,25 @@ class MapOverlayState extends State<MapOverlay> {
     _getAddressFromCoordinates(widget.lat.toDouble(), widget.long.toDouble());
   }
 
-//   Future<void> _getCurrentLocation() async {
-//     try {
-//       Position position = await Geolocator.getCurrentPosition(
-//         locationSettings: LocationSettings(
-//           accuracy: LocationAccuracy.high,
-//           distanceFilter: 100,
-//         ),
-//       );
+  // Future<void> _getCurrentLocation() async {
+  //   try {
+  //     Position position = await Geolocator.getCurrentPosition(
+  //       locationSettings: LocationSettings(
+  //         accuracy: LocationAccuracy.high,
+  //         distanceFilter: 100,
+  //       ),
+  //     );
 
-//       setState(() {
-//         _currentLocation = LatLng(position.latitude, position.longitude);
-//         _locationFetched = true;
-//       });
+  //     setState(() {
+  //       _currentLocation = LatLng(position.latitude, position.longitude);
+  //       _locationFetched = true;
+  //     });
 
-//       _getAddressFromCoordinates(position.latitude, position.longitude);
-//     } catch (e) {
-//       debugPrint("$e");
-//     }
-//   }
+  //     _getAddressFromCoordinates(position.latitude, position.longitude);
+  //   } catch (e) {
+  //     debugPrint("$e");
+  //   }
+  // }
 
   Future<void> _getAddressFromCoordinates(
     double latitude,

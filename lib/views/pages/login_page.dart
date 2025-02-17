@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:washa_mobile/auth/auth_service.dart';
 import 'package:washa_mobile/data/style.dart';
 import 'package:washa_mobile/views/pages/register_page.dart';
+import 'package:washa_mobile/views/widgets/header.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -33,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -49,37 +51,31 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-
-        // Header title
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            Header(
               "Login",
-              style: GoogleFonts.lexend(
-                fontSize: 32,
-                fontWeight: FontWeight.w800,
-              ),
+              fontSize: 40,
+              color: Style.primary,
             ),
-            Text(
-              "Masuk ke akun AnonFess anda",
-              style: GoogleFonts.lexend(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Style.muted,
-              ),
+            Header(
+              "Login to your Washa account",
+              fontWeight: FontWeight.normal,
+              color: Style.secondaryText,
             ),
           ],
         ),
-        
-        const SizedBox(height: 20),
+
+        const SizedBox(height: 40),
 
         // Email input
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
             labelText: "Email",
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            contentPadding: EdgeInsets.all(18),
           ),
           keyboardType: TextInputType.emailAddress,
         ),
@@ -91,7 +87,8 @@ class _LoginPageState extends State<LoginPage> {
           controller: _pwController,
           decoration: InputDecoration(
             labelText: "Password",
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            contentPadding: EdgeInsets.all(18),
           ),
           obscureText: true,
         ),
@@ -101,16 +98,34 @@ class _LoginPageState extends State<LoginPage> {
         // Login button
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
+          child: FilledButton(
+            style: ButtonStyle(
+              padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.all(20)),
+              shadowColor: WidgetStateProperty.all<Color>(Colors.transparent),
+            ),
             onPressed: login,
             child: Text("Login", style: GoogleFonts.lexend(fontSize: 16)),
           ),
         ),
 
+        // SizedBox(
+        //   width: double.infinity,
+        //   child: ElevatedButton(
+        //     onPressed: login,
+        //     child: Text("Login", style: GoogleFonts.lexend(fontSize: 16)),
+        //   ),
+        // ),
+
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Belum punya akun? ", style: GoogleFonts.lexend()),
+            Header(
+              "Don't have an account? ",
+              fontSize: 15,
+              color: Style.secondaryText,
+              fontWeight: FontWeight.w500,
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushReplacement(
@@ -118,12 +133,10 @@ class _LoginPageState extends State<LoginPage> {
                   MaterialPageRoute(builder: (context) => RegisterPage()),
                 );
               },
-              child: Text(
+              child: Header(
                 "Register",
-                style: GoogleFonts.lexend(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                ),
+                color: Style.primary,
+                fontSize: 15,
               ),
             ),
           ],

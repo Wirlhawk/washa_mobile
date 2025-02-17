@@ -37,8 +37,9 @@ class HomePage extends StatelessWidget {
                   final userProfile = snapshot.data!;
 
                   return MapOverlay(
-                      lat: userProfile['address']['lat'],
-                      long: userProfile['address']['long']);
+                    lat: userProfile['address']?['lat'] ?? 1.0,
+                    long: userProfile['address']?['long'] ?? 1.0,
+                  );
                 },
               ),
               Padding(

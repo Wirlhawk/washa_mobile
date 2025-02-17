@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:washa_mobile/views/pages/login_page.dart';
+import 'package:washa_mobile/views/pages/onboarding_page.dart';
 import 'package:washa_mobile/views/widget_tree.dart';
 
 class AuthGate extends StatelessWidget {
@@ -19,12 +19,13 @@ class AuthGate extends StatelessWidget {
           );
         }
 
-        // final session = snapshot.hasData ? snapshot.data : null;
+        // get current session
         final session = snapshot.data!.session;
+
         if (session != null) {
           return WidgetTree();
         } else {
-          return LoginPage();
+          return OnboardingPage();
         }
       },
     );

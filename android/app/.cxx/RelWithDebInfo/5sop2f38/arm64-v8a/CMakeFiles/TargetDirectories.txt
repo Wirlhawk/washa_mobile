@@ -1,0 +1,2 @@
+/home/wirlll/development/washa_mobile/android/app/.cxx/RelWithDebInfo/5sop2f38/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/wirlll/development/washa_mobile/android/app/.cxx/RelWithDebInfo/5sop2f38/arm64-v8a/CMakeFiles/rebuild_cache.dir

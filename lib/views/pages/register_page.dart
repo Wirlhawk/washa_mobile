@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:washa_mobile/auth/auth_service.dart';
 import 'package:washa_mobile/data/style.dart';
-import 'package:washa_mobile/views/pages/login_page.dart';
+import 'package:washa_mobile/views/widgets/header.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -38,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -60,33 +60,31 @@ class _RegisterPageState extends State<RegisterPage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            Header(
               "Register",
-              style: GoogleFonts.lexend(
-                fontSize: 32,
-                fontWeight: FontWeight.w800,
-              ),
+              fontSize: 40,
+              color: Style.primary,
             ),
-            Text(
-              "Buat akun AnonFess anda",
-              style: GoogleFonts.lexend(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Style.muted,
-              ),
+            Header(
+              "Create new Washa account",
+              fontWeight: FontWeight.normal,
+              color: Style.secondaryText,
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 40),
 
         // Username input
         TextField(
           controller: _usernameController,
           decoration: InputDecoration(
             labelText: "Username",
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            contentPadding: EdgeInsets.all(18),
           ),
+          keyboardType: TextInputType.emailAddress,
         ),
+
         const SizedBox(height: 15),
 
         // Email input
@@ -94,48 +92,60 @@ class _RegisterPageState extends State<RegisterPage> {
           controller: _emailController,
           decoration: InputDecoration(
             labelText: "Email",
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            contentPadding: EdgeInsets.all(18),
           ),
           keyboardType: TextInputType.emailAddress,
         ),
-        const SizedBox(height: 15),
 
+        const SizedBox(height: 15),
         // Password input
         TextField(
           controller: _pwController,
           decoration: InputDecoration(
             labelText: "Password",
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            contentPadding: EdgeInsets.all(18),
           ),
-          obscureText: true,
+          keyboardType: TextInputType.emailAddress,
         ),
+
         const SizedBox(height: 20),
 
         // Register button
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
+          child: FilledButton(
+            style: ButtonStyle(
+              padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.all(20)),
+              shadowColor: WidgetStateProperty.all<Color>(Colors.transparent),
+            ),
             onPressed: register,
             child: Text("Register", style: GoogleFonts.lexend(fontSize: 16)),
           ),
         ),
+
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Sudah punya akun? ", style: GoogleFonts.lexend()),
+            Header(
+              "Already have an account?",
+              fontSize: 15,
+              color: Style.secondaryText,
+              fontWeight: FontWeight.w500,
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => RegisterPage()),
                 );
               },
-              child: Text(
+              child: Header(
                 "Login",
-                style: GoogleFonts.lexend(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                ),
+                color: Style.primary,
+                fontSize: 15,
               ),
             ),
           ],
