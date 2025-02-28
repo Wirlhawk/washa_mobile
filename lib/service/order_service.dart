@@ -31,12 +31,14 @@ class OrderService {
     required List<OrderModel> orders,
     required int serviceID,
     required double price,
+    required int redeemedPoints,
+    required int earnedPoints,
   }) async {
     final userID = _supabase.auth.currentUser!.id;
 
-    final userAddress = await _supabase
+    final user = await _supabase
         .from('users')
-        .select('address')
+        .select('address, points')
         .eq('id', userID)
         .single();
 
@@ -45,7 +47,7 @@ class OrderService {
         .insert([
           {
             'user_id': userID,
-            'address': userAddress['address'],
+            'address': user['address'],
             'total_price': price,
             'service_id': serviceID,
             'status': 1,
@@ -53,6 +55,22 @@ class OrderService {
         ])
         .select()
         .single();
+        
+    final currentPoints = user['points'] - redeemedPoints + earnedPoints;
+
+    await _supabase.from('points').insert({
+      'earned': earnedPoints,
+      'redeemed': redeemedPoints,
+      'order_id': newOrder['id'],
+      'user_id': userID,
+      'before': user['points'],
+      'after': currentPoints,
+    });
+
+    await _supabase.from('users').update({
+      'points': currentPoints,
+      'id': userID,
+    }).eq('id', userID);
 
     List<Map<String, dynamic>> ordersMap = orders
         .map(
@@ -97,6 +115,12 @@ class OrderService {
           .eq('user_id', userID)
           .order('created_at', ascending: false);
     }
+  }
+
+  Future getPointHistory() async {
+    final userID = _supabase.auth.currentUser!.id;
+
+    return await _supabase.from('points').select().eq('user_id', userID);
   }
 
   Future<void> cancelOrder(String orderID) async {

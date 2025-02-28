@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:washa_mobile/auth/auth_service.dart';
@@ -25,6 +26,9 @@ class _OrderPageState extends State<OrderPage> {
   int selectedClothesIndex = 0;
   double totalPrice = 0;
   late Map? address;
+  late int points = 0;
+  int earnedPoints = 0;
+  bool usePoints = false;
 
   List<Map<String, dynamic>> services = [];
   List<Map<String, dynamic>> clothes = [];
@@ -42,7 +46,7 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<void> _loadData() async {
     await Future.wait([
-      _fetchAddress(),
+      _fetchAddressAndPoints(),
       _fetchClothes(),
       _fetchServices(),
     ]);
@@ -84,6 +88,8 @@ class _OrderPageState extends State<OrderPage> {
           serviceID: selectedServiceIndex + 1,
           orders: orders,
           price: totalPrice,
+          earnedPoints: earnedPoints,
+          redeemedPoints: usePoints ? points : 0,
         );
 
         // ignore: use_build_context_synchronously
@@ -103,10 +109,11 @@ class _OrderPageState extends State<OrderPage> {
     }
   }
 
-  Future<void> _fetchAddress() async {
+  Future<void> _fetchAddressAndPoints() async {
     final data = await authService.getCurrentUserProfile();
     setState(() {
       address = data['address'] ?? {};
+      points = data['points'] ?? 0;
     });
   }
 
@@ -138,16 +145,29 @@ class _OrderPageState extends State<OrderPage> {
     _calculateTotalPrice();
   }
 
+  void _calculateEarnedPoints() {
+    setState(() {
+      earnedPoints = (totalPrice * 0.1).round();
+    });
+  }
+
   void _calculateTotalPrice() {
     final service = services[selectedServiceIndex];
     double price = 0;
     for (var order in orders) {
       price += order.subTotal;
     }
+
     price = price * service['price_multiplier'];
+
+    if (usePoints && totalPrice != 0) {
+      usePoints ? price -= points : null;
+    }
+
     setState(() {
       totalPrice = price;
     });
+    _calculateEarnedPoints();
   }
 
   @override
@@ -181,7 +201,43 @@ class _OrderPageState extends State<OrderPage> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Divider(),
             ),
+            _buildPointsOptions(),
             _buildPriceDetail(),
+            usePoints
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Used Points",
+                        style: TextStyle(
+                          color: Style.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "-$points points",
+                        style: TextStyle(
+                            color: Style.primary, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Earned Points",
+                        style: TextStyle(
+                          color: Style.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "+$earnedPoints points",
+                        style: TextStyle(
+                            color: Style.primary, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
           ],
         ),
       ),
@@ -267,7 +323,7 @@ class _OrderPageState extends State<OrderPage> {
                 _calculateTotalPrice();
               },
             ),
-          ],
+          ]
         ),
       ],
     );
@@ -291,6 +347,27 @@ class _OrderPageState extends State<OrderPage> {
     //     ),
     //   );
     // }
+  }
+
+  Widget _buildPointsOptions() {
+    return points > 0
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Header("$points points", color: Style.primary),
+              CupertinoSwitch(
+                activeTrackColor: Style.primary,
+                value: usePoints,
+                onChanged: (value) {
+                  setState(() {
+                    usePoints = !usePoints;
+                    _calculateTotalPrice();
+                  });
+                },
+              )
+            ],
+          )
+        : SizedBox();
   }
 
   Widget _buildPriceDetail() {

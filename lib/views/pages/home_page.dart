@@ -26,86 +26,98 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              FutureBuilder(
-                future: _authService.getCurrentUserProfile(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  final userProfile = snapshot.data!;
+          child: FutureBuilder(
+            future: _authService.getCurrentUserProfile(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              final userProfile = snapshot.data!;
 
-                  return MapOverlay(
+              return Stack(
+                children: [
+                  MapOverlay(
                     lat: userProfile['address']?['lat'] ?? 1.0,
                     long: userProfile['address']?['long'] ?? 1.0,
-                  );
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Center(
-                      child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 35,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 5,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: AppbarTitle(
-                            user.email,
-                            fontSize: 16,
-                          )),
-                    ),
-                    const SizedBox(height: 168),
-                    LocationInput(),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ServiceItem(
-                          imagePath: '4.png',
-                          label: "Regular Wash",
-                          initialServiceID: 0,
+                        const SizedBox(
+                          height: 15,
                         ),
-                        ServiceItem(
-                          imagePath: '2.png',
-                          label: "Quick Wash",
-                          initialServiceID: 1,
+                        Center(
+                          child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 35,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 5,
+                                    offset: Offset(1, 1),
+                                    
+                                  ),
+                                ],
+                              ),
+                              child: AppbarTitle(
+                                user.email,
+                                fontSize: 16,
+                              )),
                         ),
-                        ServiceItem(
-                          imagePath: '1.png',
-                          label: "Wash & Fold",
-                          initialServiceID: 2,
+                        const SizedBox(height: 168),
+                        LocationInput(),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Header("Current Points"),
+                            Header(
+                              "${userProfile['points']} Points",
+                              color: Style.primary,
+                            )
+                          ],
                         ),
-                        ServiceItem(
-                          imagePath: '3.png',
-                          label: "Wash & Iron",
-                          initialServiceID: 3,
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ServiceItem(
+                              imagePath: '4.png',
+                              label: "Regular Wash",
+                              initialServiceID: 0,
+                            ),
+                            ServiceItem(
+                              imagePath: '2.png',
+                              label: "Quick Wash",
+                              initialServiceID: 1,
+                            ),
+                            ServiceItem(
+                              imagePath: '1.png',
+                              label: "Wash & Fold",
+                              initialServiceID: 2,
+                            ),
+                            ServiceItem(
+                              imagePath: '3.png',
+                              label: "Wash & Iron",
+                              initialServiceID: 3,
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 25),
+                        _buildActiveOrder()
                       ],
                     ),
-                    const SizedBox(height: 25),
-                    _buildActiveOrder()
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

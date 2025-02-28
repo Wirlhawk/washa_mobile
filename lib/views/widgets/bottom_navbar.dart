@@ -38,7 +38,7 @@ class BottomNavbar extends StatelessWidget {
                 icon: index == 1
                     ? Icon(Iconsax.setting1, color: Style.primary)
                     : Icon(Iconsax.setting),
-                label: "Search",
+                label: "Points",
               ),
               NavigationDestination(
                 icon: index == 2
